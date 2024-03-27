@@ -1,0 +1,195 @@
+\ProvidesPackage{fuvmacro}
+
+% If's for options
+\newif\ifFUV@draft\FUV@draftfalse
+
+\DeclareOption{draft}{\FUV@drafttrue}
+\ProcessOptions
+
+% Fonts and fixes
+\RequirePackage{xcolor}
+\selectcolormodel{rgb}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{ebgaramond}
+
+% Math
+\RequirePackage[leqno]{amsmath}
+\RequirePackage{amssymb,amsopn,amsthm,bm,mathrsfs}
+\RequirePackage{mathtools}
+\RequirePackage{accents}
+
+% Convenience
+\RequirePackage{suffix}
+
+\ifFUV@draft\setlength{\overfullrule}{1mm}\fi
+
+\ifFUV@draft
+% Should be done before loading showkeys
+\providecommand*{\showkeyslabelformat}[1]{%
+  \fcolorbox{blue!50!black}{cyan!5!white}{%
+\itshape\fontfamily{\rmdefault}%
+%\fontsize{4.5pt}{5.4pt}\selectfont%
+\tiny%
+#1%
+  }
+}
+\RequirePackage[notref,notcite]{showkeys}
+\fi%ifFUV@draft
+
+
+
+\RequirePackage{hyperref}% put this last...
+%\usepackage{wrapfig}
+
+\definecolor{link1}{rgb}{0,0,.7}
+\definecolor{link2}{rgb}{0,0.25,0.5}
+\@ifpackagelater{hyperref}{2012/05/28}{
+  % Link colors
+  \hypersetup{final,colorlinks,allcolors=link1,citecolor=link2}
+}{
+  \@ifpackagelater{hyperref}{2009/10/09}{
+    \hypersetup{final,colorlinks,linkcolor=link1,anchorcolor=link1,filecolor=link1,menucolor=link1,runcolor=link1,urlcolor=link1,citecolor=link2,linktocpage=false,breaklinks=true}
+  }{
+    % Really old version of hyperref. No options for maximum compatibility.
+    \hypersetup{final}
+  }
+}
+
+%
+% Styles etc.
+%
+%\renewcommand{\figurename}{\scriptsize Fig.}
+\allowdisplaybreaks
+
+%
+% Theorems, Lemmas etc.
+%
+
+\ifcsname theorem\endcsname\else
+  % Some document classes define their own theorems.
+  % Only do these if no theorem environment is present.
+  \theoremstyle{plain}
+  \newtheorem{theorem}{Theorem}
+  \newtheorem{lemma}[theorem]{Lemma}
+  \newtheorem{proposition}[theorem]{Proposition}
+  \newtheorem{corollary}[theorem]{Corollary}
+  \newtheorem{conjecture}[theorem]{Conjecture}
+  %\@ifclassloaded{exam}{}{\newtheorem{question}[theorem]{Question}}
+
+  \newtheorem*{theorem*}{Theorem}
+  \newtheorem*{lemma*}{Lemma}
+  \newtheorem*{proposition*}{Proposition}
+  \newtheorem*{corollary*}{Corollary}
+
+  \theoremstyle{definition}
+  \newtheorem{definition}[theorem]{Definition}
+
+  \theoremstyle{remark}
+  \newtheorem{remark}[theorem]{Remark}
+  \newtheorem*{remark*}{Remark}
+  \newtheorem{example}[theorem]{Example}
+
+\fi
+
+% Misc. theorems. (Uses optional argument as name.)
+\newtheoremstyle{misc}
+  {}%      Space above, empty = `usual value'
+  {}%      Space below
+  {\itshape}% Body font
+  {}%         Indent amount (empty = no indent, \parindent = para indent)
+  {\bfseries}% Thm head font
+  {.}%        Punctuation after thm head
+  { }%     Space after thm head: " " = normal interword space; \newline = linebreak
+  {\thmname{#3}\thmnumber{ #2}}% Thm head spec
+\theoremstyle{misc}
+\newtheorem{miscthm}[theorem]{Misc}
+\newtheorem*{miscthm*}{Misc}
+\theoremstyle{plain}%Reset default for new definitions in main file
+
+%
+% References.
+%
+\providecommand{\cites}[1]{\cite{#1}}
+
+
+%
+% Proof steps
+%
+\newcounter{FUVCase}\setcounter{FUVCase}{0}
+\newenvironment{proofcases}{\setcounter{FUVCase}{0}}{}
+\newcommand{\case}[1][\relax]{\smallskip\par\noindent\stepcounter{FUVCase}\emph{Case \Roman{FUVCase}: \ifx#1\relax\relax\else#1.\fi}}
+
+\newcounter{FUVStep}\setcounter{FUVStep}{0}
+\newenvironment{proofsteps}{\setcounter{FUVStep}{0}}{}
+\newcommand{\step}[1][\relax]{\smallskip\par\noindent\stepcounter{FUVStep}\emph{Step \arabic{FUVStep}: \ifx#1\relax\relax\else#1.\fi}}
+
+%
+% Symbols and notation
+%
+\newcommand{\lap}{\Delta}
+\newcommand{\laplacian}{\lap}
+\newcommand{\grad}{\nabla}
+\newcommand{\gradperp}{\grad^\perp}
+\newcommand{\dv}{\grad \cdot}
+\newcommand{\curl}{\grad \times}
+\newcommand{\varmin}{\wedge}
+\newcommand{\varmax}{\vee}
+\newcommand{\E}{\bm{E}}
+\renewcommand{\P}{\bm{P}}
+\newcommand{\one}{\bm{1}}
+\newcommand{\interior}[1]{%
+  {\kern0pt#1}^{\mathrm{o}}%
+}
+
+\DeclareMathOperator{\erf}{erf}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\var}{Var}
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\trace}{tr}
+\DeclareMathOperator{\Lip}{Lip}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\dist}{dist}
+
+\renewcommand{\epsilon}{\varepsilon}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+
+%
+% Spaces & sets
+%
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\T}{\mathbb{T}}
+\newcommand{\ubar}[1]{\underaccent{\bar}{#1}}
+\newcommand\pr{\mathbb{P}} 
+\newcommand\eps{\varepsilon}
+\newcommand\cM{\mathcal{M}} \newcommand\cA{\mathcal{A}}
+\newcommand\cC{\mathcal{C}} \newcommand\cV{\mathcal{V}}
+\newcommand\cB{\mathcal{B}} \newcommand\cX{\mathcal{X}} 
+\newcommand\cY{\mathcal{Y}} \newcommand\cD{\mathcal{D}}
+\newcommand\cE{\mathcal{E}} \newcommand\cP{\mathcal{P}}
+%
+% Test if we're in a display or not
+%
+%\newif\ifFUV@textstyle
+%\FUV@textstyletrue
+%\everydisplay\expandafter{\the\everydisplay\FUV@textstylefalse}
+
+%
+% Norms and parenthesis
+%
+% Macros defined with DeclarePairedDelimiter call a \mathclose at the end.
+% This has the unwanted side effect of making sub/superscripts a bit
+% higher/lower than normal. \newdelim and \newdelimX are wrapppers around
+% \DeclarePairedDelimiter that cancels this effect. (This will mess up if you
+% use '(' as the right delimiter however.)
+
+
+\newcommand{\defeq}{\stackrel{\scriptscriptstyle\textup{def}}{=}}
+
+% et al.
+\newcommand{\etal}{et\penalty50\ al.\xspace}
