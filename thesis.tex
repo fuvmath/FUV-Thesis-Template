@@ -33,11 +33,13 @@
 
 \maketitle                  % create a title page from the preamble info
 \include{dedication}        % include a dedication.tex file
-\include{acknowlegements}   % include an acknowledgements.tex file
-\include{abstract}          % include the abstract
 
 \begin{romanpages}          % start roman page numbering
 \tableofcontents            % generate and include a table of contents
+\addcontentsline{toc}{section}{Abstract}
+\include{abstract}          % include the abstract
+\addcontentsline{toc}{section}{Acknowledgements}
+\include{acknowledgements}   % include an acknowledgements.tex file
 \listoffigures              % generate and include a list of figures
 \end{romanpages}            % end roman page numbering
 
